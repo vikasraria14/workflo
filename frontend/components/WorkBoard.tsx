@@ -19,7 +19,6 @@ import { type Task } from "./TaskCard";
 import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
-import { DragStartEvent } from "@dnd-kit/core/dist/types";
 
 const defaultCols = [
   { id: "toDo", title: "Todo" },
@@ -28,11 +27,9 @@ const defaultCols = [
   { id: "completed", title: "Finished" },
 ] satisfies Column[];
 
-interface WorkBoardProps {}
-
 export type ColumnId = (typeof defaultCols)[number]["id"];
 
-const WorkBoard: React.FC<WorkBoardProps> = () => {
+export default function WorkBoard() {
   const columns = useMemo(() => defaultCols, []);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -54,7 +51,6 @@ const WorkBoard: React.FC<WorkBoardProps> = () => {
         console.error("Error fetching tasks:", error);
       }
     };
-
     fetchTasks();
   }, []);
 
@@ -150,12 +146,12 @@ const WorkBoard: React.FC<WorkBoardProps> = () => {
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
     >
-      <BoardContainer children={undefined}>
+      <BoardContainer>
         {columns.map((col) => (
           <BoardColumn
             key={col.id}
             column={col}
-            tasks={tasks.filter((task) => task.status === col.id)}
+            tasks={tasks.filter((task) => task.columnId === col.id)}
           />
         ))}
       </BoardContainer>
@@ -167,6 +163,7 @@ const WorkBoard: React.FC<WorkBoardProps> = () => {
   }
 
   async function onDragEnd(event: DragEndEvent) {
+    console.log("enter")
     const { active, over } = event;
     if (!over) return;
 
@@ -183,20 +180,32 @@ const WorkBoard: React.FC<WorkBoardProps> = () => {
     if (isActiveATask) {
       const activeTask = activeData.task;
       const newColumnId = overId as ColumnId;
-      // Check if the task's column ID has changed
+
+      console.log("ddd",activeTask,newColumnId)
+
       if (activeTask.columnId !== newColumnId) {
-        // Update task status in the state
-        setTasks((tasks) =>
-          tasks.map((task) =>
-            task.id === activeId ? { ...task, columnId: newColumnId } : task
-          )
-        );
-        // Make API call to update task status
         try {
-          await axios.put(`/tasks/${activeId}`, {
-            status: newColumnId,
+          const response = await axios.put(`/tasks/${activeId}`, {
+            status: newColumnId, 
           });
-        } catch (error) {
+          if (response.status === 200) {
+            setTasks((tasks) =>
+              tasks.map((task) =>
+                task.id === activeId ? { ...task, columnId: newColumnId } : task
+              )
+            );
+          }
+        // setTasks((tasks) =>
+        //   tasks.map((task) =>
+        //     task.id === activeId ? { ...task, columnId: newColumnId } : task
+        //   )
+        // );
+        // try {
+        //   await axios.put(`/tasks/${activeId}`, {
+        //     status: newColumnId,
+        //   });
+         }
+         catch (error) {
           console.error("Error updating task status:", error);
         }
       }
@@ -242,5 +251,3 @@ const WorkBoard: React.FC<WorkBoardProps> = () => {
     }
   }
 }
-
-export default WorkBoard;
