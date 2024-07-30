@@ -163,8 +163,9 @@ export default function WorkBoard() {
   }
 
   async function onDragEnd(event: DragEndEvent) {
-    console.log("enter")
     const { active, over } = event;
+    console.log("enter", active, over);
+    console.log("enter2", over);
     if (!over) return;
 
     const activeId = active.id;
@@ -173,29 +174,24 @@ export default function WorkBoard() {
     if (!hasDraggableData(active)) return;
 
     const activeData = active.data.current;
-
-    if (activeId === overId) return;
+    console.log(activeId === overId);
+    if (activeId !== overId) return;
 
     const isActiveATask = activeData?.type === "Task";
     if (isActiveATask) {
       const activeTask = activeData.task;
       const newColumnId = overId as ColumnId;
 
-      console.log("ddd",activeTask,newColumnId)
+      console.log("ddd", activeTask, newColumnId);
 
-      if (activeTask.columnId !== newColumnId) {
-        try {
-          const response = await axios.put(`/tasks/${activeId}`, {
-            status: newColumnId, 
-          });
-          if (response.status === 200) {
-            setTasks((tasks) =>
-              tasks.map((task) =>
-                task.id === activeId ? { ...task, columnId: newColumnId } : task
-              )
-            );
-          }
-        // setTasks((tasks) =>
+      // if (activeTask.columnId !== newColumnId) {
+      try {
+        const response = await axios.put(`/tasks/${activeId}`, {
+          status: activeTask.columnId,
+        });
+        const response1 = await axios.get<Task[]>("/tasks");
+        setTasks(response1.data);
+
         //   tasks.map((task) =>
         //     task.id === activeId ? { ...task, columnId: newColumnId } : task
         //   )
@@ -204,11 +200,10 @@ export default function WorkBoard() {
         //   await axios.put(`/tasks/${activeId}`, {
         //     status: newColumnId,
         //   });
-         }
-         catch (error) {
-          console.error("Error updating task status:", error);
-        }
+      } catch (error) {
+        console.error("Error updating task status:", error);
       }
+      // }
     }
   }
 

@@ -45,7 +45,7 @@ exports.updateTask = async (req, res) => {
         // const {  status} = req.body;
 
         const task = await Task.findById(id);
-
+        console.log(task)
         if (!task) {
             return res.status(404).json({ message: 'Task not found' });
         }
@@ -60,7 +60,6 @@ exports.updateTask = async (req, res) => {
         task.status = status || task.status;
         task.priority = priority || task.priority;
         task.deadline = deadline || task.deadline;
-
         const updatedTask = await task.save();
         res.status(200).json(updatedTask);
     } catch (error) {
@@ -68,6 +67,7 @@ exports.updateTask = async (req, res) => {
             message: 'Server error',
             error: error.message
         });
+        console.log(error.message)
     }
 };
 
@@ -101,7 +101,7 @@ exports.deleteTask = async (req, res) => {
 exports.getFormattedTasks = async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.user._id });
-
+ 
         const formattedTasks = tasks.map(task => ({
             id: task._id,
             columnId: task.status,
