@@ -2,12 +2,12 @@ import { useRef, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "../../core/dataFetchingConfigs/axiosGlobalConfig";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import { EyeIcon } from "../../assets/GlobalIcons";
+import { toast } from 'react-toastify';
+import Link from "next/link";
+
 
 export default function Login() {
   const router = useRouter();
-  const errRef = useRef();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +18,7 @@ export default function Login() {
   }, [email, password]);
 
   const handleSubmit = async (e) => {
+    console.log("d")
     e.preventDefault();
     try {
       const response = await axios.post("auth/login", {
@@ -25,7 +26,7 @@ export default function Login() {
         password: password,
       });
       if (response.data) {
-        console.log("login succsess", response.data);
+        console.log("login success", response.data);
         const user = response.data;
         Cookies.set("user", JSON.stringify(user));
         setEmail("");
@@ -44,82 +45,65 @@ export default function Login() {
     }
   };
   return (
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <Image
-          class="mx-auto h-10 w-auto"
-          src="next.svg"
-          alt="Your Company"
-          width={80}
-          height={100}
-        />
-        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign in to your account
-        </h2>
-      </div>
-
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label
-              for="email"
-              class="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Email address
-            </label>
-            <div class="mt-2">
-              <input
-                autocomplete="email"
-                required
-                className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                label="Email ID"
-                id="login-email-field"
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between">
-              <label
-                for="password"
-                class="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Password
-              </label>
-              <div class="text-sm">
-                <a
-                  href="#"
-                  class="font-semibold text-indigo-600 hover:text-indigo-500"
+    <section className="bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        {/* IMAGE HERE */}
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Sign in to your account
+            </h1>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  for="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  {errMsg && errMsg}
-                </a>
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  id="email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="name@company.com"
+                  required=""
+                />
               </div>
-            </div>
-            <div class="mt-2">
-              <input
-                id="outlined-required login-password-field"
-                label="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                type="password"
-                autocomplete="current-password"
-                class="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
+              <div>
+                <label
+                  for="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required=""
+                />
+              </div>
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                {errMsg && errMsg}
+              </p>
+              <button
+                type="submit"
+                className='btn btn-back'
+              >
+                Sign In
+              </button>
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                      New User ? <Link href="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Register Now</Link>
+                  </p>
+            </form>
           </div>
-
-          <div>
-            <button
-              type="submit"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

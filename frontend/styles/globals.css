@@ -3,46 +3,53 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  --primary-color: rgba(39, 36, 147, 1);
+  --primary-light-color: rgba(39, 36, 147, 0.1);
+  --secondary-color: rgba(74, 192, 136, 1);
+  --secondary-color-100: rgba(74, 192, 136, 0.1);
+  --secondary-light-color: rgba(0, 129, 229, 1);
+  --secondary-light-100: rgba(0, 129, 229, 0.1);
+  --secondary-light: rgba(0, 129, 229, 0.05);
+  --background-color: rgba(234, 232, 237, 1);
+  --black-color: rgb(30, 27, 22);
 
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --white-color: rgb(255, 255, 255);
+  --grey-000: rgb(30, 27, 22, 0.03);
+  --grey-100: rgb(30, 27, 22, 0.1);
+  --grey-200: rgb(30, 27, 22, 0.2);
+  --grey-300: rgb(30, 27, 22, 0.3);
+  --grey-400: rgb(30, 27, 22, 0.4);
+  --grey-500: rgb(30, 27, 22, 0.5);
+  --grey-600: rgb(30, 27, 22, 0.6);
+  --grey-700: rgb(30, 27, 22, 0.7);
+  --grey-800: rgb(30, 27, 22, 0.8);
+  --grey-900: rgb(30, 27, 22, 0.9);
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
 
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
+  --font-title: "josefin-sans", sans-serif;
+  --font-para: "poppins", sans-serif;
 
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
 
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-
-  --radius: 0.5rem;
+  --danger: rgb(241, 45, 84);
+  --danger-100: rgb(241, 45, 84, 0.1);
+  --danger-200: rgba(252, 213, 221, 0.2);
+  --success: rgb(46, 188, 49);
+  --success-100: rgb(46, 188, 49, 0.1);
+  --success-200: rgba(213, 242, 214, 0.4);
+  --info: rgb(18, 119, 221);
+  --info-100: rgb(18, 119, 221, 0.1);
+  --warning: rgb(255, 162, 2);
+  --warning-100: rgb(255, 162, 2, 0.1);
+  --warning-200: rgb(255, 236, 204, 0.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+body {
+  font-family: var(--font-para) !important;
+  background-color: rgb(234, 232, 237, 0.5) !important;
+  overflow: hidden !important;
 }
+
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -54,10 +61,20 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
 }
 
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
 
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
