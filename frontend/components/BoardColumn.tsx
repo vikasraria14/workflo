@@ -22,6 +22,7 @@ export interface ColumnDragData {
 }
 
 interface BoardColumnProps {
+  key:string;
   column: Column;
   tasks: Task[];
   isOverlay?: boolean;

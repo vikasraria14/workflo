@@ -146,7 +146,7 @@ export default function WorkBoard() {
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
     >
-      <BoardContainer>
+      <BoardContainer children={undefined}>
         {columns.map((col) => (
           <BoardColumn
             key={col.id}
@@ -163,7 +163,6 @@ export default function WorkBoard() {
   }
 
   async function onDragEnd(event: DragEndEvent) {
-    console.log("enter")
     const { active, over } = event;
     if (!over) return;
 
@@ -180,9 +179,6 @@ export default function WorkBoard() {
     if (isActiveATask) {
       const activeTask = activeData.task;
       const newColumnId = overId as ColumnId;
-
-      console.log("ddd",activeTask,newColumnId)
-
       if (activeTask.columnId !== newColumnId) {
         try {
           const response = await axios.put(`/tasks/${activeId}`, {
@@ -195,15 +191,6 @@ export default function WorkBoard() {
               )
             );
           }
-        // setTasks((tasks) =>
-        //   tasks.map((task) =>
-        //     task.id === activeId ? { ...task, columnId: newColumnId } : task
-        //   )
-        // );
-        // try {
-        //   await axios.put(`/tasks/${activeId}`, {
-        //     status: newColumnId,
-        //   });
          }
          catch (error) {
           console.error("Error updating task status:", error);
