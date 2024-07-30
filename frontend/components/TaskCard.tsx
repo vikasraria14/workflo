@@ -6,15 +6,12 @@ import { Button } from "@/components/ui/button";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
 import { Badge } from "./ui/badge";
-import { ColumnId } from "./WorkBoard";
+import { ColumnId } from "./KanbanBoard";
 
 export interface Task {
-  _id: UniqueIdentifier;
-  status: ColumnId;
-  description: string;
-  priority : string;
-  deadLine: Date;
-  title:String;
+  id: UniqueIdentifier;
+  columnId: ColumnId;
+  content: string;
 }
 
 interface TaskCardProps {
@@ -38,7 +35,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     transition,
     isDragging,
   } = useSortable({
-    id: task._id,
+    id: task.id,
     data: {
       type: "Task",
       task,
@@ -85,10 +82,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         </Badge>
       </CardHeader>
       <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-        <div>Title : {task.title}</div>
-        <div>Description : {task.description}</div>
-        <div>Priority : {task.priority}</div>
-        <div>Deadline : {task.deadLine}</div>
+        {task.content}
       </CardContent>
     </Card>
   );
