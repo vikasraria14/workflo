@@ -6,8 +6,10 @@ import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import {store} from '@/redux/store'
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { Provider } from "react-redux";
 
 const LayoutComponent = dynamic(() => import("@/components/layout/Index.tsx"), {
   ssr: false,
@@ -39,6 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>FJM</title>
         <link rel="icon" href="/FJM-Logo.ico" />
       </Head>
+      <Provider store={store}>
       <AuthContext.Provider value={{ userInfo }}>
         <LayoutComponent hideNavbar={isLoginPage} hideSidebar={isLoginPage}>
           <Component {...pageProps} />
@@ -57,6 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         </LayoutComponent>
       </AuthContext.Provider>
+      </Provider>
     </>
   );
 }

@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch } from "react-redux";
+import {setTasksData} from '@/redux/reduxSlices/tasksSlice'
 import axios from '@/core/dataFetchingConfigs/axiosGlobalConfig';
 
-function AddTaskForm({status, setTasks}) {
+function AddTaskForm({status, setTasks, enableStatusDropdown}) {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
@@ -20,17 +23,22 @@ function AddTaskForm({status, setTasks}) {
     setTaskData({ ...taskData, [name]: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       const response = await axios.post('/tasks', taskData);
+      if(response.status === 201){
+        const data = response.data
       setTasks((tasks)=>{
-        
-        let x=[...tasks, response.data]
+        let x=[...tasks, data]
         console.log("updated",tasks,x)
         return x
     })
-      console.log('Task added successfully:', response.data);
-      handleClose();
+    dispatch(setTasksData(data))
+    console.log('Task added successfully:', response.data);
+    handleClose();
+  }
+    
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -67,8 +75,10 @@ function AddTaskForm({status, setTasks}) {
                 onChange={handleChange}
               />
             </div>
+            
             <div className="form-group">
               <label>Status</label>
+              {enableStatusDropdown ? (
               <select
                 className="form-control"
                 name="status"
@@ -80,7 +90,16 @@ function AddTaskForm({status, setTasks}) {
                 <option value="underReview">Under Review</option>
                 <option value="completed">Completed</option>
               </select>
+            ): (
+              <textarea
+                className="form-control"
+                name="status"
+                disabled
+                value={taskData.status}
+              />
+            )}
             </div>
+           
             <div className="form-group">
               <label>Priority</label>
               <select

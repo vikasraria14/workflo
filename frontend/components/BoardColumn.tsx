@@ -6,7 +6,7 @@ import { Task, TaskCard } from "./TaskCard";
 import { cva } from "class-variance-authority";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-import AddTaskForm from "./AddTask";
+import AddTaskForm from "./AddTask.jsx";
 export interface Column {
   id: UniqueIdentifier;
   title: string;
@@ -49,6 +49,7 @@ export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnP
     },
   });
 
+
   const style = {
     transition,
     transform: CSS.Translate.toString(transform),
@@ -89,7 +90,7 @@ export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnP
         </CardContent>
       </ScrollArea>
     </Card>
-    <AddTaskForm status={column.id} setTasks={setTasks}/>
+    <AddTaskForm status={column.id} setTasks={setTasks} enableStatusDropdown={false}/>
     </div>
   );
 }

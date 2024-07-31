@@ -24,6 +24,7 @@ import { type Task, TaskCard } from "./TaskCard";
 import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import {FilterIcon} from '@/assets/GlobalIcons'
+import { useSelector } from "react-redux";
 
 const defaultCols = [
   { id: "toDo", title: "Todo" },
@@ -35,6 +36,8 @@ const defaultCols = [
 export type ColumnId = (typeof defaultCols)[number]["id"];
 
 export default function WorkBoard() {
+  let currentTasks = useSelector((state) => state.TASKSLICE);
+
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
@@ -53,7 +56,7 @@ export default function WorkBoard() {
       }
     };
     fetchTasks();
-  }, []);
+  }, [currentTasks]);
 
   const sensors = useSensors(
     useSensor(MouseSensor),

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import Cookies from "js-cookie";
 import WorkBoard from "@/components/WorkBoard"; 
 import { useRouter } from 'next/router';
+import DashboardCardContainer from '@/components/DashboardCardContainer'
 
 
 const Home: React.FC = () => {
@@ -18,7 +19,10 @@ const Home: React.FC = () => {
   }, [userId, router]);
 
   return (
-    <div className="min-h-screen flex flex-col gap-10">
+    <div className="min-h-screen flex flex-col gap-4">
+      <header>
+        <DashboardCardContainer/>
+      </header>
      <main className="mx-1 w-full">
         <WorkBoard />
       </main>
