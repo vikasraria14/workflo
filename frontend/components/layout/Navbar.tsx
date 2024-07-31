@@ -1,9 +1,10 @@
 'use client';
 
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { UserIcon } from '@/assets/GlobalIcons';
+import { AuthContext } from "@/pages/_app";
 
 export default function Navbar() {
   const router = useRouter();
@@ -45,13 +46,10 @@ interface UserInfo {
   email: string;
 }
 
-const userInfo: UserInfo = {
-  name: "Aditya Pandey",
-  email: "aditya.pandey@gmail.com",
-};
-
 function HoverButtonWithTooltip() {
   const [showTooltip, setShowTooltip] = useState(false);
+  const contextData = useContext(AuthContext);
+  const { userInfo } = contextData as { userInfo: UserInfo };
 
   const handleMouseEnter = () => {
     setShowTooltip(true);
@@ -73,7 +71,7 @@ function HoverButtonWithTooltip() {
       </button>
       {showTooltip && (
         <div className="absolute right-full mx-2 top-0 w-65 px-4 py-2 text-sm font-sm rounded-lg border border-gray-200 bg-white text-gray-800" style={{whiteSpace:'nowrap'}}>
-            {userInfo.name}
+          {userInfo?.name}
         </div>
       )}
     </div>

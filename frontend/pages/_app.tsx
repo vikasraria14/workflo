@@ -31,13 +31,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
    const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!userId) {
-  //     router.push("/login");
-  //   }
-  // }, [userId, router]);
+  useEffect(() => {
+    if (!userId) {
+      router.push("/login");
+    }
+  }, [userId, router]);
 
-  const isLoginPage = router.pathname === "/login";
+  const isLoginPage = router.pathname === "/login" || router.pathname === "/login";
 
   return (
     <>
