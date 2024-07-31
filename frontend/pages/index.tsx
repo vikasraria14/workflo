@@ -3,17 +3,14 @@ import React, { useEffect } from 'react';
 import Cookies from "js-cookie";
 import WorkBoard from "@/components/WorkBoard"; 
 import { useRouter } from 'next/router';
-import DashboardCardContainer from '@/components/DashboardCardContainer'
-
+import DashboardCardContainer from '@/components/DashboardCardContainer';
 
 const Home: React.FC = () => {
-
   const userId = Cookies.get("user");
   const router = useRouter();
 
-
   useEffect(() => {
-    if(!userId) {
+    if (!userId) {
       router.push("/login");
     }
   }, [userId, router]);
@@ -21,9 +18,9 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col gap-4">
       <header>
-        <DashboardCardContainer/>
+        <DashboardCardContainer />
       </header>
-     <main className="mx-1 w-full">
+      <main className="w-full max-w-screen overflow-hidden">
         <WorkBoard />
       </main>
     </div>
