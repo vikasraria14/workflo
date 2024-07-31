@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import { GripVertical } from "lucide-react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
 
 export interface Column {
   id: UniqueIdentifier;
@@ -69,6 +71,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   );
 
   return (
+    <div  className="flex flex-col gap-y-2 p-1">
     <Card
       ref={setNodeRef}
       style={style}
@@ -77,7 +80,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
       })}
     >
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
-        <Button
+        {/* <Button
           variant={"ghost"}
           {...attributes}
           {...listeners}
@@ -85,7 +88,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         >
           <span className="sr-only">{`Move column: ${column.title}`}</span>
           <GripVertical />
-        </Button>
+        </Button> */}
         <span className="ml-auto"> {column.title}</span>
       </CardHeader>
       <ScrollArea>
@@ -98,6 +101,8 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         </CardContent>
       </ScrollArea>
     </Card>
+    <AddTaskForm/>
+    </div>
   );
 }
 
@@ -126,3 +131,39 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
     </ScrollArea>
   );
 }
+
+
+function AddTaskForm() {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  return (
+    <>
+      <button className="btn btn-back" onClick={handleShow}>
+        Add Task +
+      </button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Task Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <div className="flex justify-between mx-3 p-3">
+          <div className="w-[25%]">
+          <button className="btn btn-back" onClick={handleClose}>
+            Close
+          </button>
+          </div>
+          <div className="w-[25%]">
+          <button className="btn btn-back" onClick={handleClose}>
+            Add
+          </button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+export default AddTaskForm;

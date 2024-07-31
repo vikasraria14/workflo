@@ -237,7 +237,7 @@ export default function WorkBoard() {
 
     const activeData = active.data.current;
 
-    if (activeId === overId) return;
+    if (activeId !== overId) return;
     const isActiveATask = activeData?.type === "Task";
     if (isActiveATask) {
       const activeTask = activeData.task;
