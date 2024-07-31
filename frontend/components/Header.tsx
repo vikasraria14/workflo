@@ -27,7 +27,7 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
               <select
                 className="form-control"
                 name="status"
-                value={'toDo'}
+                value={'Filter'}
                 onChange={handleChange}
               >
                 <option value="toDo">Todo</option>
