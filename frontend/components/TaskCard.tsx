@@ -62,6 +62,16 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     },
   });
 
+  const changeColor = (key)=>{
+    switch (key) {
+      case 'Low': return 'bg-green-200'
+        case 'Medium': return 'bg-orange-200'
+        case 'Urgent': return 'bg-red-500'
+      default: 'bg-transparent'
+        
+    }
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -80,7 +90,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             </div>
             <p className="mb-6 mt-3 leading-normal text-sm">{task.description}</p>
             <div className="flex items-center justify-between">
-              <button type="button" className="inline-block px-8 py-2 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs hover:scale-102 active:shadow-soft-xs tracking-tight-soft border-fuchsia-500 text-fuchsia-500 hover:border-fuchsia-500 hover:bg-transparent hover:text-fuchsia-500 hover:opacity-75 hover:shadow-none active:bg-fuchsia-500 active:text-white active:hover:bg-transparent active:hover:text-fuchsia-500">{task.priority}</button>
+              <div className={`inline-block ${changeColor(task.priority)} px-8 py-2 mb-0 font-bold text-center uppercase align-middle transition-all border border-solid rounded-lg shadow-none leading-pro ease-soft-in text-xs`}>{task.priority}</div>
             </div>
             <div className="flex gap-x-3 mt-4">
               <div><ClockIcon /></div>

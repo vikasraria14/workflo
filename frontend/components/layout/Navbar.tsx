@@ -31,9 +31,12 @@ const { userInfo } = contextData as { userInfo: UserInfo };
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 mb-4">
       <nav className="max-w-[95rem] w-full mx-6 px-1 flex flex-wrap basis-full items-center justify-between">
-        <div className="sm:order-1 flex-none text-2xl font-bold focus:outline-none focus:opacity-80">
-          Good Morning {userInfo?.name}
+      <div className="sm:order-1 flex-none text-2xl font-bold focus:outline-none focus:opacity-80">
+          Work<span className="text-blue-700">flow!</span>
         </div>
+        {/* <div className="sm:order-1 flex-none text-2xl font-bold focus:outline-none focus:opacity-80">
+          Good Morning {userInfo?.name}
+        </div> */}
         <div className="sm:order-4 flex items-center gap-x-4">
           <HoverButtonWithTooltip userInfo={userInfo}/>
           <button
