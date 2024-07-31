@@ -19,7 +19,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col gap-10">
-     <main className="mx-4 flex flex-col gap-6">
+     <main className="mx-1 w-full">
         <WorkBoard />
       </main>
     </div>
