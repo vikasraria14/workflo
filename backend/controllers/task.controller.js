@@ -108,7 +108,8 @@ exports.getFormattedTasks = async (req, res) => {
             content: task.title,
             description: task.description,
             priority: task.priority,
-            deadline: task.deadline
+            deadline: task.deadline,
+            createdAt: task.createdAt
         }));
 
         res.status(200).json(formattedTasks);
