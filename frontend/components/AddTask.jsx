@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setTasksData } from '@/redux/reduxSlices/tasksSlice';
 import axios from '@/core/dataFetchingConfigs/axiosGlobalConfig';
 
-function AddTaskForm({ status, setTasks, enableStatusDropdown, isDisabled }) {
+function AddTaskForm({ status, setTasks }) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const [taskData, setTaskData] = useState({
@@ -34,6 +34,13 @@ function AddTaskForm({ status, setTasks, enableStatusDropdown, isDisabled }) {
           return x;
         });
         dispatch(setTasksData(data));
+        setTaskData({
+          title: '',
+          description: '',
+          status: status ? status : 'toDo',
+          priority: 'Low',
+          deadline: '',
+        })
         handleClose();
       }
     } catch (error) {
@@ -79,7 +86,7 @@ function AddTaskForm({ status, setTasks, enableStatusDropdown, isDisabled }) {
                 name="status"
                 value={taskData.status}
                 onChange={handleChange}
-                disabled={!isDisabled}
+                disabled={status}
               >
                 <option value="toDo">To-Do</option>
                 <option value="inProgress">In Progress</option>
