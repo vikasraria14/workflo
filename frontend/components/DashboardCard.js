@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function DashboardCard() {
+export default function DashboardCard({title,description}) {
   return (
     <div className="flex flex-row w-full mx-2 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
   <div className="flex-auto py-3 px-1">
@@ -12,11 +12,10 @@ export default function DashboardCard() {
       </div>
       <div className="flex-none w-2/3 max-w-full px-3">
         <div>
-          <p className="mb-0 font-sans font-semibold leading-normal text-sm">Today's Money</p>
-          <h5 className="mb-0 font-bold">
-            $53,000
-            <span className="leading-normal text-sm font-weight-bolder text-lime-500">+55%</span>
-          </h5>
+          <p className="mb-0 font-sans font-semibold leading-normal text-sm">{title}</p>
+          <p className="mb-0 font-bold">
+            <span className="leading-normal text-sm font-weight-bolder text-lime-500">{description}</span>
+          </p>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import "@/styles/button.css";
+import '@/styles/select.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Cookies from "js-cookie";
 import type { AppProps } from "next/app";
