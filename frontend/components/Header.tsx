@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 export default function Header({ tasks, unfilteredTasks, setTasks }) {
   const [searchText, setSearchText] = useState('');
+  const [enableFilterDropdown,setEnableFilterDropdown] = useState(false)
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
@@ -14,10 +15,30 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
     setTasks(filtered);
   };
 
+  function handleChange(){
+    console.log("first")
+    setEnableFilterDropdown(false)
+  }
+
   return (
     <div className="flex justify-end mx-[18px] gap-x-2">
+       {enableFilterDropdown ? (
+            <div className='custom-select'>
+              <select
+                className="form-control"
+                name="status"
+                value={'toDo'}
+                onChange={handleChange}
+              >
+                <option value="toDo">Todo</option>
+                <option value="inProgress">In Progress</option>
+                <option value="underReview">Under Review</option>
+                <option value="completed">Completed</option>
+              </select>
+              </div>
+      ):""}
       <div className="flex items-center">
-        <button className="px-2 py-1 border border-gray-100 rounded-xl">
+        <button className="px-2 py-1 border border-gray-100 rounded-xl" onClick={()=>setEnableFilterDropdown((prev)=> !prev)}>
           <FilterIcon />
         </button>
       </div>
@@ -31,6 +52,7 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
           onChange={handleSearch}
         />
       </div>
+     
     </div>
   );
 }
