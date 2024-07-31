@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 import "@/styles/button.css";
 import Cookies from "js-cookie";
-
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import dynamic from "next/dynamic";
@@ -32,12 +31,16 @@ export default function App({ Component, pageProps }: AppProps) {
    const router = useRouter();
 
   useEffect(() => {
-    if (!userId) {
+    const isSignUpPage = router.pathname === "/signup" ;
+     if(isSignUpPage){
+      return
+     }
+    else if(!userId) {
       router.push("/login");
     }
   }, [userId, router]);
 
-  const isLoginPage = router.pathname === "/login" || router.pathname === "/login";
+  const isLoginPage = router.pathname === "/login" || router.pathname === "/signup";
 
   return (
     <>

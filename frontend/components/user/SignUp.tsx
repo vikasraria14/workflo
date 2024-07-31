@@ -7,6 +7,7 @@ import axios from "@/core/dataFetchingConfigs/axiosGlobalConfig";
 import { useRouter } from "next/router";
 
 interface SignUpFormState {
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -15,6 +16,7 @@ interface SignUpFormState {
 
 export default function SignUp() {
   const [formState, setFormState] = useState<SignUpFormState>({
+    name : "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -33,7 +35,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const { email, password, confirmPassword, termsAccepted } = formState;
+    const {name, email, password, confirmPassword, termsAccepted } = formState;
 
     try {
       if (!termsAccepted) {
@@ -46,11 +48,12 @@ export default function SignUp() {
       }
 
       const response = await axios.post("/auth/signUp", {
+        name,
         email,
         password,
       });
 
-      if (response.data) {
+      if (response.status === 201) {
         console.log("Sign Up success", response.data);
         setErrMsg("");
         toast.success("Sign Up Successful, Login Now");
@@ -72,6 +75,24 @@ export default function SignUp() {
               Create an account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Jon Doe"
+                  required
+                  value={formState.name}
+                  onChange={handleChange}
+                />
+              </div>
               <div>
                 <label
                   htmlFor="email"
