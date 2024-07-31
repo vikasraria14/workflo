@@ -239,7 +239,6 @@ export default function WorkBoard() {
 
     const { active, over } = event;
     if (!over) return;
-
     const activeId = active.id;
     const overId = over.id;
 
@@ -247,12 +246,11 @@ export default function WorkBoard() {
 
     const activeData = active.data.current;
 
-    if (activeId !== overId) return;
+    // if (activeId !== overId) return;
     const isActiveATask = activeData?.type === "Task";
     if (isActiveATask) {
       const activeTask = activeData.task;
       const newColumnId = overId as ColumnId;
-      console.log("ddd", activeTask, newColumnId);
       try {
         const response = await axios.put(`/tasks/${activeId}`, {
           status: activeTask.columnId,
