@@ -5,12 +5,8 @@ import { useMemo } from "react";
 import { Task, TaskCard } from "./TaskCard";
 import { cva } from "class-variance-authority";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { Button } from "./ui/button";
-import { GripVertical } from "lucide-react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-import { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-
+import AddTaskForm from "./AddTask";
 export interface Column {
   id: UniqueIdentifier;
   title: string;
@@ -27,9 +23,10 @@ interface BoardColumnProps {
   column: Column;
   tasks: Task[];
   isOverlay?: boolean;
+  setTasks: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
@@ -80,15 +77,6 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
       })}
     >
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
-        {/* <Button
-          variant={"ghost"}
-          {...attributes}
-          {...listeners}
-          className=" p-1 text-primary/50 -ml-2 h-auto cursor-grab relative"
-        >
-          <span className="sr-only">{`Move column: ${column.title}`}</span>
-          <GripVertical />
-        </Button> */}
         <span className="ml-auto"> {column.title}</span>
       </CardHeader>
       <ScrollArea>
@@ -101,7 +89,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         </CardContent>
       </ScrollArea>
     </Card>
-    <AddTaskForm/>
+    <AddTaskForm status={column.id} setTasks={setTasks}/>
     </div>
   );
 }
@@ -133,37 +121,3 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
 }
 
 
-function AddTaskForm() {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  return (
-    <>
-      <button className="btn btn-back" onClick={handleShow}>
-        Add Task +
-      </button>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Task Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <div className="flex justify-between mx-3 p-3">
-          <div className="w-[25%]">
-          <button className="btn btn-back" onClick={handleClose}>
-            Close
-          </button>
-          </div>
-          <div className="w-[25%]">
-          <button className="btn btn-back" onClick={handleClose}>
-            Add
-          </button>
-          </div>
-        </div>
-      </Modal>
-    </>
-  );
-}
-
-export default AddTaskForm;

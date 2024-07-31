@@ -185,6 +185,7 @@ export default function WorkBoard() {
               key={col.id}
               column={col}
               tasks={tasks.filter((task) => task.columnId === col.id)}
+              setTasks = {setTasks}
             />
           ))}
         </SortableContext>
@@ -200,6 +201,7 @@ export default function WorkBoard() {
                 tasks={tasks.filter(
                   (task) => task.columnId === activeColumn.id
                 )}
+                setTasks ={setTasks}
               />
             )}
             {activeTask && <TaskCard task={activeTask} isOverlay />}
