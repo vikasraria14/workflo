@@ -23,7 +23,7 @@ import { BoardColumn, BoardContainer } from "./BoardColumn";
 import { type Task, TaskCard } from "./TaskCard";
 import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
-import {FilterIcon} from '@/assets/GlobalIcons'
+import Header from "./Header";
 
 const defaultCols = [
   { id: "toDo", title: "Todo" },
@@ -171,16 +171,7 @@ export default function WorkBoard() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="flex justify-end mx-[18px] gap-x-2">
-        <div className="flex item-center">
-        <button className="px-2 py-1 border border-gray-100 rounded-xl">
-           <FilterIcon/>
-        </button>  
-        </div>
-        <div className="w-[300px]">
-              <input type="text" id="first_name" className="bg-gray-50 border !border-gray-300 text-gray-900 text-sm rounded-lg !focus:ring-gray-100 focus:border-red-100 w-full p-2.5" placeholder="Search"/>
-        </div>
-      </div>
+     <Header/> 
     <DndContext
       accessibility={{
         announcements,
