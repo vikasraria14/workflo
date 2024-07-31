@@ -78,3 +78,8 @@ body {
   stroke: #4691f6;
   stroke-width: 1;
 }
+
+input:focus {
+  outline: none;
+  border-color: #9ca3af; /* gray-400 */
+}

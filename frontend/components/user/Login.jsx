@@ -2,8 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "../../core/dataFetchingConfigs/axiosGlobalConfig";
 import { useRouter } from "next/router";
-import { toast } from 'react-toastify';
 import Link from "next/link";
+
 
 
 export default function Login() {
@@ -12,6 +12,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [showPasswordEyeBtn, setShowPasswordEyeBtn] = useState(false);
+
+  const handleEyeBtn = (e) => {
+    const isChecked = e.target.checked
+    setShowPasswordEyeBtn(isChecked);
+  };
 
   useEffect(() => {
     setErrMsg("");
@@ -50,10 +56,10 @@ export default function Login() {
         {/* IMAGE HERE */}
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <div className="text-[20px] text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Welcome to <span className="text-blue-500">Workflo!</span>
+            </div>
+            <form className="space-y-2 md:space-y-3" onSubmit={handleSubmit}>
               <div>
                 <label
                   for="email"
@@ -79,7 +85,7 @@ export default function Login() {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={showPasswordEyeBtn ? "text" : "password"}
                   onChange={(e) => setPassword(e.target.value)}
                   name="password"
                   id="password"
@@ -88,6 +94,27 @@ export default function Login() {
                   required=""
                 />
               </div>
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="terms"
+                    aria-describedby="terms"
+                    type="checkbox"
+                    name="eyeBtn"
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                    checked={showPasswordEyeBtn}
+                    onChange={handleEyeBtn}
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label
+                    htmlFor="terms"
+                    className="font-light text-gray-500 dark:text-gray-300"
+                  >
+                    Show Password{" "}
+                  </label>
+                </div>
+              </div>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 {errMsg && errMsg}
               </p>
@@ -95,10 +122,10 @@ export default function Login() {
                 type="submit"
                 className='btn btn-back'
               >
-                Sign In
+                 Login
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                      New User ? <Link href="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Register Now</Link>
+                      Don't have an account? Create a <Link href="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500 " style={{textDecoration:'none'}}>new account</Link>
                   </p>
             </form>
           </div>

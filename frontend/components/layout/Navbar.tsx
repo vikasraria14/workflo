@@ -6,8 +6,18 @@ import Cookies from "js-cookie";
 import { UserIcon } from '@/assets/GlobalIcons';
 import { AuthContext } from "@/pages/_app";
 
+
+
 export default function Navbar() {
   const router = useRouter();
+
+  interface UserInfo {
+    name: string;
+    email: string;
+  }
+
+  const contextData = useContext(AuthContext);
+const { userInfo } = contextData as { userInfo: UserInfo };
 
   function redirectToLoginPage(): void {
     console.log("Redirecting to login page");
@@ -23,11 +33,14 @@ export default function Navbar() {
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 dark:bg-neutral-800 mb-4">
       <nav className="max-w-[95rem] w-full mx-6 px-1 flex flex-wrap basis-full items-center justify-between">
-        <a className="sm:order-1 flex-none text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
+        {/* <div className="sm:order-1 flex-none text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
           Work Flow
-        </a>
+        </div> */}
+        <div className="sm:order-1 flex-none text-2xl font-bold dark:text-white focus:outline-none focus:opacity-80">
+          Good Morning {userInfo?.name}
+        </div>
         <div className="sm:order-4 flex items-center gap-x-4">
-          <HoverButtonWithTooltip />
+          <HoverButtonWithTooltip userInfo={userInfo}/>
           <button
             type="button"
             onClick={handleLogOut}
@@ -41,15 +54,8 @@ export default function Navbar() {
   );
 }
 
-interface UserInfo {
-  name: string;
-  email: string;
-}
-
-function HoverButtonWithTooltip() {
+function HoverButtonWithTooltip({userInfo}) {
   const [showTooltip, setShowTooltip] = useState(false);
-  const contextData = useContext(AuthContext);
-  const { userInfo } = contextData as { userInfo: UserInfo };
 
   const handleMouseEnter = () => {
     setShowTooltip(true);

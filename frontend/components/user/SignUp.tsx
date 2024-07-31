@@ -11,7 +11,6 @@ interface SignUpFormState {
   email: string;
   password: string;
   confirmPassword: string;
-  termsAccepted: boolean;
 }
 
 export default function SignUp() {
@@ -19,29 +18,31 @@ export default function SignUp() {
     name : "",
     email: "",
     password: "",
-    confirmPassword: "",
-    termsAccepted: false,
+    confirmPassword: ""
   });
   const [errMsg, setErrMsg] = useState<string>("");
   const router = useRouter();
+  const [showPasswordEyeBtn, setShowPasswordEyeBtn] = useState(false);
+
+  const handleEyeBtn = (e) => {
+    const isChecked = e.target.checked
+    setShowPasswordEyeBtn(isChecked);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const {name, email, password, confirmPassword, termsAccepted } = formState;
+    const {name, email, password, confirmPassword } = formState;
 
     try {
-      if (!termsAccepted) {
-        setErrMsg("You must accept the terms and conditions");
-        return;
-      }
+     
       if (password !== confirmPassword) {
         setErrMsg("Passwords do not match");
         return;
@@ -71,10 +72,10 @@ export default function SignUp() {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create an account
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+          <div className="text-[20px] text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Welcome to <span className="text-blue-500">Workflo!</span>
+            </div>
+            <form className="space-y-2 md:space-y-3" onSubmit={handleSubmit}>
             <div>
                 <label
                   htmlFor="email"
@@ -119,7 +120,7 @@ export default function SignUp() {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={showPasswordEyeBtn ? "text" : "password"}
                   name="password"
                   id="password"
                   placeholder="••••••••"
@@ -137,7 +138,7 @@ export default function SignUp() {
                   Confirm password
                 </label>
                 <input
-                  type="password"
+                  type={showPasswordEyeBtn ? "text" : "password"}
                   name="confirmPassword"
                   id="confirm-password"
                   placeholder="••••••••"
@@ -153,11 +154,10 @@ export default function SignUp() {
                     id="terms"
                     aria-describedby="terms"
                     type="checkbox"
-                    name="termsAccepted"
+                    name="eyeBtn"
                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                    required
-                    checked={formState.termsAccepted}
-                    onChange={handleChange}
+                    checked={showPasswordEyeBtn}
+                    onChange={handleEyeBtn}
                   />
                 </div>
                 <div className="ml-3 text-sm">
@@ -165,13 +165,7 @@ export default function SignUp() {
                     htmlFor="terms"
                     className="font-light text-gray-500 dark:text-gray-300"
                   >
-                    I accept the{" "}
-                    <a
-                      className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                      href="#"
-                    >
-                      Terms and Conditions
-                    </a>
+                    Show Password{" "}
                   </label>
                 </div>
               </div>
@@ -182,17 +176,18 @@ export default function SignUp() {
               )}
               <button
                 type="submit"
-                className="btn btn-back"
+                className="btn btn-back mt-4"
               >
-                Create an account
+                Sign Up
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account? {" "}
                 <Link
                   href="/login"
+                  style={{textDecoration:'none'}}
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
-                  Login here
+                  Log in.
                 </Link>
               </p>
             </form>
