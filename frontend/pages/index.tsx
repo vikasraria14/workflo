@@ -20,7 +20,7 @@ const Home: React.FC = () => {
       <header>
         <DashboardCardContainer />
       </header>
-      <main className="w-full max-w-screen overflow-hidden">
+      <main className="w-full max-w-screen overflow-y-hidden ove">
         <WorkBoard />
       </main>
     </div>

@@ -56,7 +56,7 @@ export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnP
   };
 
   const variants = cva(
-    "h-[500px] max-h-[500px] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
+    "h-[500px] max-h-[500px] w-[350px] max-w-full lg:max-w-[320px] bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
     {
       variants: {
         dragging: {
@@ -69,7 +69,7 @@ export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnP
   );
 
   return (
-    <div  className="flex flex-col gap-y-2 p-1">
+    <div className="flex flex-col gap-y-2 p-1">
     <Card
       ref={setNodeRef}
       style={style}
@@ -113,7 +113,7 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
         dragging: dndContext.active ? "active" : "default",
       })}
     >
-      <div className="flex gap-4 items-center flex-row justify-center">
+      <div className="flex lg:gap-2 gap-3 items-center flex-row justify-center">
         {children}
       </div>
       <ScrollBar orientation="horizontal" />
