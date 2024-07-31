@@ -6,8 +6,6 @@ import Cookies from "js-cookie";
 import { UserIcon } from '@/assets/GlobalIcons';
 import { AuthContext } from "@/pages/_app";
 
-
-
 export default function Navbar() {
   const router = useRouter();
 
@@ -31,12 +29,9 @@ const { userInfo } = contextData as { userInfo: UserInfo };
   };
 
   return (
-    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 dark:bg-neutral-800 mb-4">
+    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 mb-4">
       <nav className="max-w-[95rem] w-full mx-6 px-1 flex flex-wrap basis-full items-center justify-between">
-        {/* <div className="sm:order-1 flex-none text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
-          Work Flow
-        </div> */}
-        <div className="sm:order-1 flex-none text-2xl font-bold dark:text-white focus:outline-none focus:opacity-80">
+        <div className="sm:order-1 flex-none text-2xl font-bold focus:outline-none focus:opacity-80">
           Good Morning {userInfo?.name}
         </div>
         <div className="sm:order-4 flex items-center gap-x-4">
@@ -44,7 +39,7 @@ const { userInfo } = contextData as { userInfo: UserInfo };
           <button
             type="button"
             onClick={handleLogOut}
-            className="py-2 px-8 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+            className="py-2 px-8 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
           >
             Logout
           </button>

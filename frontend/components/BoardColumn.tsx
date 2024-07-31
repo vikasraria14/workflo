@@ -113,7 +113,7 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
         dragging: dndContext.active ? "active" : "default",
       })}
     >
-      <div className="flex lg:gap-2 gap-3 items-center flex-row justify-center">
+      <div className="flex lg:gap-2 gap-4 items-center flex-row justify-center">
         {children}
       </div>
       <ScrollBar orientation="horizontal" />
