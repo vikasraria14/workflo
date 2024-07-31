@@ -30,16 +30,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
    const router = useRouter();
 
-  useEffect(() => {
-    const isSignUpPage = router.pathname === "/signup" ;
-     if(isSignUpPage){
-      return
-     }
-    else if(!userId) {
-      router.push("/login");
-    }
-  }, [userId, router]);
-
   const isLoginPage = router.pathname === "/login" || router.pathname === "/signup";
 
   return (
