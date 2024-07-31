@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default function Header({ tasks, unfilteredTasks, setTasks }) {
   const [searchText, setSearchText] = useState('');
   const [enableFilterDropdown,setEnableFilterDropdown] = useState(false)
-
+  const [priority, setPriority] = useState("")
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     setSearchText(searchValue);
@@ -15,9 +15,15 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
     setTasks(filtered);
   };
 
-  function handleChange(){
-    console.log("first")
-    setEnableFilterDropdown(false)
+  function handleChange(e){
+    console.log("first", e.target.value)
+    const filtered = unfilteredTasks.filter(task =>{
+        console.log(task.priority)
+        return task.priority.includes( e.target.value)
+  });
+      setPriority(e.target.value)
+      setTasks(filtered);
+    // setEnableFilterDropdown(false)
   }
 
   return (
@@ -27,13 +33,17 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
               <select
                 className="form-control"
                 name="status"
+<<<<<<< HEAD
                 value={'Filter'}
+=======
+                value={priority}
+>>>>>>> 5d205bbd0d199297d31ab246e0fba09ae2300d5e
                 onChange={handleChange}
               >
-                <option value="toDo">Todo</option>
-                <option value="inProgress">In Progress</option>
-                <option value="underReview">Under Review</option>
-                <option value="completed">Completed</option>
+                <option value="">All</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="Urgent">Urgent</option>
               </select>
               </div>
       ):""}
