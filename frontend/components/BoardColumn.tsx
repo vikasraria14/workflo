@@ -90,7 +90,7 @@ export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnP
         </CardContent>
       </ScrollArea>
     </Card>
-    <AddTaskForm status={column.id} setTasks={setTasks} enableStatusDropdown={false} isDisabled={false}/>
+    <AddTaskForm status={column.id} setTasks={setTasks} />
     </div>
   );
 }

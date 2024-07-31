@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -41,10 +41,12 @@ export default function WorkBoard() {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
-  const [unfilteredTasks, setUnfilteredTasks] =useState<Task[]>([])
+  const [unfilteredTasks, setUnfilteredTasks] = useState<Task[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [searchText, setSearchText] = useState("");
+  const [priority, setPriority] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -175,47 +177,55 @@ export default function WorkBoard() {
 
   return (
     <div className="flex flex-col gap-y-2">
-     <Header tasks={tasks} setTasks = {setTasks} unfilteredTasks = {unfilteredTasks}/> 
-    <DndContext
-      accessibility={{
-        announcements,
-      }}
-      sensors={sensors}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-    >
-      <BoardContainer>
-        <SortableContext items={columnsId}>
-          {columns.map((col) => (
-            <BoardColumn
-              key={col.id}
-              column={col}
-              tasks={tasks.filter((task) => task.columnId === col.id)}
-              setTasks = {setTasks}
-            />
-          ))}
-        </SortableContext>
-      </BoardContainer>
-
-      {typeof document !== 'undefined' &&
-        createPortal(
-          <DragOverlay>
-            {activeColumn && (
+      <Header
+        tasks={tasks}
+        setTasks={setTasks}
+        unfilteredTasks={unfilteredTasks}
+        setPriority={setPriority}
+        setSearchText={setSearchText}
+        priority={priority}
+        searchText={searchText}
+      />
+      <DndContext
+        accessibility={{
+          announcements,
+        }}
+        sensors={sensors}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+      >
+        <BoardContainer>
+          <SortableContext items={columnsId}>
+            {columns.map((col) => (
               <BoardColumn
-                isOverlay
-                column={activeColumn}
-                tasks={tasks.filter(
-                  (task) => task.columnId === activeColumn.id
-                )}
-                setTasks ={setTasks}
+                key={col.id}
+                column={col}
+                tasks={tasks.filter((task) => task.columnId === col.id)}
+                setTasks={setTasks}
               />
-            )}
-            {activeTask && <TaskCard task={activeTask} isOverlay />}
-          </DragOverlay>,
-          document.body
-        )}
-    </DndContext>
+            ))}
+          </SortableContext>
+        </BoardContainer>
+
+        {typeof document !== "undefined" &&
+          createPortal(
+            <DragOverlay>
+              {activeColumn && (
+                <BoardColumn
+                  isOverlay
+                  column={activeColumn}
+                  tasks={tasks.filter(
+                    (task) => task.columnId === activeColumn.id
+                  )}
+                  setTasks={setTasks}
+                />
+              )}
+              {activeTask && <TaskCard task={activeTask} isOverlay />}
+            </DragOverlay>,
+            document.body
+          )}
+      </DndContext>
     </div>
   );
 
@@ -256,7 +266,13 @@ export default function WorkBoard() {
           status: activeTask.columnId,
         });
         const response1 = await axios.get<Task[]>("/tasks");
-        setTasks(response1.data);
+        let filtered = response.data.filter(
+          (task) =>
+            task.content.toLowerCase().includes(searchText) &&
+            task.priority.includes(priority)
+        );
+
+        setTasks(filtered);
       } catch (error) {
         console.error("Error updating task status:", error);
       }
@@ -326,5 +342,3 @@ export default function WorkBoard() {
     }
   }
 }
-
-

@@ -3,25 +3,29 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import AddTaskForm from './AddTask';
 
-export default function Header({ tasks, unfilteredTasks, setTasks }) {
-  const [searchText, setSearchText] = useState('');
-  const [priority, setPriority] = useState('');
+export default function Header({ tasks, unfilteredTasks, setTasks, searchText, setSearchText, priority, setPriority }) {
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     setSearchText(searchValue);
-    const filtered = unfilteredTasks.filter(task =>
-      task.content.toLowerCase().includes(searchValue)
+    const filtered = unfilteredTasks.filter(
+      (task) =>
+        task.content.toLowerCase().includes(searchValue) &&
+        (priority === '' || task.priority.includes(priority))
     );
+
     setTasks(filtered);
   };
 
   const handleChange = (e) => {
     const priorityValue = e.target.value;
     setPriority(priorityValue);
-    const filtered = priorityValue
-      ? unfilteredTasks.filter(task => task.priority === priorityValue)
-      : unfilteredTasks;
+    const filtered = unfilteredTasks.filter(
+      (task) =>
+        task.content.toLowerCase().includes(searchText.toLowerCase()) &&
+        (priorityValue === '' || task.priority.includes(priorityValue))
+    );
+
     setTasks(filtered);
   };
 
@@ -56,8 +60,7 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
           <SearchIcon />
         </div>
       </div>
-      <AddTaskForm status={null} setTasks={setTasks} enableStatusDropdown={false} isDisabled={true}/>
-      
+      <AddTaskForm status={null} setTasks={setTasks} enableStatusDropdown={false} isDisabled={true} />
     </div>
   );
 }
@@ -66,4 +69,8 @@ Header.propTypes = {
   tasks: PropTypes.array.isRequired,
   unfilteredTasks: PropTypes.array.isRequired,
   setTasks: PropTypes.func.isRequired,
+  searchText: PropTypes.string.isRequired,
+  setSearchText: PropTypes.func.isRequired,
+  priority: PropTypes.string.isRequired,
+  setPriority: PropTypes.func.isRequired,
 };
