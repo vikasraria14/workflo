@@ -33,11 +33,7 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
               <select
                 className="form-control"
                 name="status"
-<<<<<<< HEAD
-                value={'Filter'}
-=======
                 value={priority}
->>>>>>> 5d205bbd0d199297d31ab246e0fba09ae2300d5e
                 onChange={handleChange}
               >
                 <option value="">All</option>
