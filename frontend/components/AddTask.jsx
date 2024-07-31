@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch } from "react-redux";
-import {setTasksData} from '@/redux/reduxSlices/tasksSlice'
+import { setTasksData } from '@/redux/reduxSlices/tasksSlice';
 import axios from '@/core/dataFetchingConfigs/axiosGlobalConfig';
 
-function AddTaskForm({status, setTasks, enableStatusDropdown}) {
+function AddTaskForm({ status, setTasks, enableStatusDropdown, isDisabled }) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
-    status: status?status:'toDo',
+    status: status ? status : 'toDo',
     priority: 'Low',
     deadline: '',
   });
@@ -24,21 +24,18 @@ function AddTaskForm({status, setTasks, enableStatusDropdown}) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const response = await axios.post('/tasks', taskData);
-      if(response.status === 201){
-        const data = response.data
-      setTasks((tasks)=>{
-        let x=[...tasks, data]
-        console.log("updated",tasks,x)
-        return x
-    })
-    dispatch(setTasksData(data))
-    console.log('Task added successfully:', response.data);
-    handleClose();
-  }
-    
+      if (response.status === 201) {
+        const data = response.data;
+        setTasks((tasks) => {
+          let x = [...tasks, data];
+          return x;
+        });
+        dispatch(setTasksData(data));
+        handleClose();
+      }
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -46,7 +43,7 @@ function AddTaskForm({status, setTasks, enableStatusDropdown}) {
 
   return (
     <>
-      <button className="btn btn-back" onClick={handleShow}>
+      <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none" onClick={handleShow}>
         Add Task +
       </button>
       <Modal show={show} onHide={handleClose}>
@@ -75,31 +72,21 @@ function AddTaskForm({status, setTasks, enableStatusDropdown}) {
                 onChange={handleChange}
               />
             </div>
-            
             <div className="form-group">
               <label>Status</label>
-              {enableStatusDropdown ? (
               <select
                 className="form-control"
                 name="status"
                 value={taskData.status}
                 onChange={handleChange}
+                disabled={!isDisabled}
               >
                 <option value="toDo">To-Do</option>
                 <option value="inProgress">In Progress</option>
                 <option value="underReview">Under Review</option>
                 <option value="completed">Completed</option>
               </select>
-            ): (
-              <textarea
-                className="form-control"
-                name="status"
-                disabled
-                value={taskData.status}
-              />
-            )}
             </div>
-           
             <div className="form-group">
               <label>Priority</label>
               <select

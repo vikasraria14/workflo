@@ -1,6 +1,7 @@
 import { FilterIcon, SearchIcon } from '@/assets/GlobalIcons';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import AddTaskForm from './AddTask';
 
 export default function Header({ tasks, unfilteredTasks, setTasks }) {
   const [searchText, setSearchText] = useState('');
@@ -55,6 +56,8 @@ export default function Header({ tasks, unfilteredTasks, setTasks }) {
           <SearchIcon />
         </div>
       </div>
+      <AddTaskForm status={null} setTasks={setTasks} enableStatusDropdown={false} isDisabled={true}/>
+      
     </div>
   );
 }
