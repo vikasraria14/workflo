@@ -38,7 +38,7 @@ export default function WorkBoard() {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
-
+  const [unfilteredTasks, setUnfilteredTasks] =useState<Task[]>([])
   const [tasks, setTasks] = useState<Task[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -48,6 +48,7 @@ export default function WorkBoard() {
       try {
         const response = await axios.get<Task[]>("/tasks");
         setTasks(response.data);
+        setUnfilteredTasks(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
@@ -171,7 +172,7 @@ export default function WorkBoard() {
 
   return (
     <div className="flex flex-col gap-y-2">
-     <Header/> 
+     <Header tasks={tasks} setTasks = {setTasks} unfilteredTasks = {unfilteredTasks}/> 
     <DndContext
       accessibility={{
         announcements,
