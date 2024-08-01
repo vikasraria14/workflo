@@ -16,6 +16,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/**/*"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/**/*", "components/user/Login.jsx", "components/AddTask.jsx"],
   "exclude": ["node_modules"]
 }

@@ -13,11 +13,9 @@ instance.interceptors.request.use(
     let userId = Cookies.get("user");
     if (userId) {
       const parsedUserObj = JSON.parse(userId);
-      const userToken = parsedUserObj?.tokens.access.token;
-      // config.headers.Authorization = `Bearer ${userToken}`;
-      config.headers.Authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YTg5M2RjMGJjOGU5MjZjZDkyMWY5NSIsImlhdCI6MTcyMjMzMDAyNH0.hQD-hU7jR40Qnj1cXgVzHnakhYoUOTctCSOL1ti8FGE'  
-    }else{
-      config.headers.Authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YTg5M2RjMGJjOGU5MjZjZDkyMWY5NSIsImlhdCI6MTcyMjMzMDAyNH0.hQD-hU7jR40Qnj1cXgVzHnakhYoUOTctCSOL1ti8FGE'   }
+      const userToken = parsedUserObj?.token;
+      config.headers.Authorization = `Bearer ${userToken}`;
+    }
     return config;
   },
   function (error) {

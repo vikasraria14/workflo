@@ -1,0 +1,51 @@
+
+.btn {
+    position: relative;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    height: 43px;
+    font-size: 14px;
+    transition: all 0.4s ease-in-out;
+  }
+  
+  .btn-submit {
+      color: var(--white-color);
+      background-color: var(--primary-color);
+      transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+    
+    .btn-submit:hover {
+      background-color: var(--secondary-light-color) !important;
+    }
+    
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-logout {
+      width: 100px;
+      align-items: center;
+      border: 2px solid var(--grey-100);
+      background-color: var(--grey-000);
+      height: 40px;
+      font-size: 0.9em;
+      border-radius: 10px;
+      text-align: center;
+      transition: all 1s ease-in-out;
+    }
+    
+
+.btn-back {
+    background-color: transparent;
+    color: var(--grey-700);
+    outline: 1.5px solid var(--grey-500);
+}
+
+.btn-back:hover {
+    background-color: var(--grey-500);
+    color: var(--white-color);
+}

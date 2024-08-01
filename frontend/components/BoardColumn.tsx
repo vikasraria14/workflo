@@ -5,10 +5,8 @@ import { useMemo } from "react";
 import { Task, TaskCard } from "./TaskCard";
 import { cva } from "class-variance-authority";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { Button } from "./ui/button";
-import { GripVertical } from "lucide-react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-
+import AddTaskForm from "./AddTask.jsx";
 export interface Column {
   id: UniqueIdentifier;
   title: string;
@@ -25,9 +23,10 @@ interface BoardColumnProps {
   column: Column;
   tasks: Task[];
   isOverlay?: boolean;
+  setTasks: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardColumn({ column, tasks, isOverlay, setTasks }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
@@ -50,13 +49,14 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     },
   });
 
+
   const style = {
     transition,
     transform: CSS.Translate.toString(transform),
   };
 
   const variants = cva(
-    "h-[500px] max-h-[500px] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
+    "h-[500px] max-h-[500px] w-[350px] max-w-full lg:max-w-[290px] min-w-[350px] lg:min-w-[290px]  bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
     {
       variants: {
         dragging: {
@@ -69,6 +69,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   );
 
   return (
+    <div className="flex flex-col gap-y-2 p-1">
     <Card
       ref={setNodeRef}
       style={style}
@@ -77,15 +78,6 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
       })}
     >
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
-        <Button
-          variant={"ghost"}
-          {...attributes}
-          {...listeners}
-          className=" p-1 text-primary/50 -ml-2 h-auto cursor-grab relative"
-        >
-          <span className="sr-only">{`Move column: ${column.title}`}</span>
-          <GripVertical />
-        </Button>
         <span className="ml-auto"> {column.title}</span>
       </CardHeader>
       <ScrollArea>
@@ -98,6 +90,8 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         </CardContent>
       </ScrollArea>
     </Card>
+    <AddTaskForm status={column.id} setTasks={setTasks} />
+    </div>
   );
 }
 
@@ -119,10 +113,12 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
         dragging: dndContext.active ? "active" : "default",
       })}
     >
-      <div className="flex gap-4 items-center flex-row justify-center">
+      <div className="flex lg:gap-2 gap-4 items-center flex-row justify-center border border-gray-300 rounded-xl py-1">
         {children}
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );
 }
+
+

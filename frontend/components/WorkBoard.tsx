@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import axios from "@/core/dataFetchingConfigs/axiosGlobalConfig";
+"use client";
 
-import { BoardColumn, BoardContainer } from "./BoardColumn";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   DndContext,
   type DragEndEvent,
   type DragOverEvent,
+  DragOverlay,
+  type DragStartEvent,
   useSensor,
   useSensors,
   KeyboardSensor,
@@ -14,11 +16,15 @@ import {
   TouchSensor,
   MouseSensor,
 } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { type Task } from "./TaskCard";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import axios from "@/core/dataFetchingConfigs/axiosGlobalConfig";
+import { coordinateGetter } from "./multipleContainersKeyboardPreset";
+import { BoardColumn, BoardContainer } from "./BoardColumn";
+import { type Task, TaskCard } from "./TaskCard";
 import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
-import { coordinateGetter } from "./multipleContainersKeyboardPreset";
+import { useSelector } from "react-redux";
+import Header from "./Header";
 
 const defaultCols = [
   { id: "toDo", title: "Todo" },
@@ -30,9 +36,30 @@ const defaultCols = [
 export type ColumnId = (typeof defaultCols)[number]["id"];
 
 export default function WorkBoard() {
-  const columns = useMemo(() => defaultCols, []);
+  let currentTasks = useSelector((state) => state.TASKSLICE);
+
+  const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+  const [unfilteredTasks, setUnfilteredTasks] = useState<Task[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [searchText, setSearchText] = useState("");
+  const [priority, setPriority] = useState("");
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get<Task[]>("/tasks");
+        setTasks(response.data);
+        setUnfilteredTasks(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    fetchTasks();
+  }, [currentTasks]);
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -41,18 +68,6 @@ export default function WorkBoard() {
       coordinateGetter: coordinateGetter,
     })
   );
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get<Task[]>("/tasks");
-        setTasks(response.data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-    fetchTasks();
-  }, []);
 
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
     const tasksInColumn = tasks.filter((task) => task.columnId === columnId);
@@ -68,7 +83,13 @@ export default function WorkBoard() {
   const announcements: Announcements = {
     onDragStart({ active }) {
       if (!hasDraggableData(active)) return;
-      if (active.data.current?.type === "Task") {
+      if (active.data.current?.type === "Column") {
+        const startColumnIdx = columnsId.findIndex((id) => id === active.id);
+        const startColumn = columns[startColumnIdx];
+        return `Picked up Column ${startColumn?.title} at position: ${
+          startColumnIdx + 1
+        } of ${columnsId.length}`;
+      } else if (active.data.current?.type === "Task") {
         pickedUpTaskColumn.current = active.data.current.task.columnId;
         const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
           active.id,
@@ -85,6 +106,14 @@ export default function WorkBoard() {
       if (!hasDraggableData(active) || !hasDraggableData(over)) return;
 
       if (
+        active.data.current?.type === "Column" &&
+        over.data.current?.type === "Column"
+      ) {
+        const overColumnIdx = columnsId.findIndex((id) => id === over.id);
+        return `Column ${active.data.current.column.title} was moved over ${
+          over.data.current.column.title
+        } at position ${overColumnIdx + 1} of ${columnsId.length}`;
+      } else if (
         active.data.current?.type === "Task" &&
         over.data.current?.type === "Task"
       ) {
@@ -109,8 +138,18 @@ export default function WorkBoard() {
         pickedUpTaskColumn.current = null;
         return;
       }
-
       if (
+        active.data.current?.type === "Column" &&
+        over.data.current?.type === "Column"
+      ) {
+        const overColumnPosition = columnsId.findIndex((id) => id === over.id);
+
+        return `Column ${
+          active.data.current.column.title
+        } was dropped into position ${overColumnPosition + 1} of ${
+          columnsId.length
+        }`;
+      } else if (
         active.data.current?.type === "Task" &&
         over.data.current?.type === "Task"
       ) {
@@ -137,74 +176,117 @@ export default function WorkBoard() {
   };
 
   return (
-    <DndContext
-      accessibility={{
-        announcements,
-      }}
-      sensors={sensors}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-    >
-      <BoardContainer>
-        {columns.map((col) => (
-          <BoardColumn
-            key={col.id}
-            column={col}
-            tasks={tasks.filter((task) => task.columnId === col.id)}
-          />
-        ))}
-      </BoardContainer>
-    </DndContext>
+    <div className="flex flex-col gap-y-2">
+      <Header
+        tasks={tasks}
+        setTasks={setTasks}
+        unfilteredTasks={unfilteredTasks}
+        setPriority={setPriority}
+        setSearchText={setSearchText}
+        priority={priority}
+        searchText={searchText}
+      />
+      <DndContext
+        accessibility={{
+          announcements,
+        }}
+        sensors={sensors}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+      >
+        <BoardContainer>
+          <SortableContext items={columnsId}>
+            {columns.map((col) => (
+              <BoardColumn
+                key={col.id}
+                column={col}
+                tasks={tasks.filter((task) => task.columnId === col.id)}
+                setTasks={setTasks}
+              />
+            ))}
+          </SortableContext>
+        </BoardContainer>
+
+        {typeof document !== "undefined" &&
+          createPortal(
+            <DragOverlay>
+              {activeColumn && (
+                <BoardColumn
+                  isOverlay
+                  column={activeColumn}
+                  tasks={tasks.filter(
+                    (task) => task.columnId === activeColumn.id
+                  )}
+                  setTasks={setTasks}
+                />
+              )}
+              {activeTask && <TaskCard task={activeTask} isOverlay />}
+            </DragOverlay>,
+            document.body
+          )}
+      </DndContext>
+    </div>
   );
 
-  async function onDragStart(event: DragStartEvent) {
+  function onDragStart(event: DragStartEvent) {
     if (!hasDraggableData(event.active)) return;
+    const data = event.active.data.current;
+    if (data?.type === "Column") {
+      setActiveColumn(data.column);
+      return;
+    }
+
+    if (data?.type === "Task") {
+      setActiveTask(data.task);
+      return;
+    }
   }
 
   async function onDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    console.log("enter", active, over);
-    console.log("enter2", over);
-    if (!over) return;
+    setActiveColumn(null);
+    setActiveTask(null);
 
+    const { active, over } = event;
+    if (!over) return;
     const activeId = active.id;
     const overId = over.id;
 
     if (!hasDraggableData(active)) return;
 
     const activeData = active.data.current;
-    console.log(activeId === overId);
-    if (activeId !== overId) return;
 
+    // if (activeId !== overId) return;
     const isActiveATask = activeData?.type === "Task";
     if (isActiveATask) {
       const activeTask = activeData.task;
       const newColumnId = overId as ColumnId;
-
-      console.log("ddd", activeTask, newColumnId);
-
-      // if (activeTask.columnId !== newColumnId) {
       try {
         const response = await axios.put(`/tasks/${activeId}`, {
           status: activeTask.columnId,
         });
         const response1 = await axios.get<Task[]>("/tasks");
-        setTasks(response1.data);
+        let filtered = response.data.filter(
+          (task) =>
+            task.content.toLowerCase().includes(searchText) &&
+            task.priority.includes(priority)
+        );
 
-        //   tasks.map((task) =>
-        //     task.id === activeId ? { ...task, columnId: newColumnId } : task
-        //   )
-        // );
-        // try {
-        //   await axios.put(`/tasks/${activeId}`, {
-        //     status: newColumnId,
-        //   });
+        setTasks(filtered);
       } catch (error) {
         console.error("Error updating task status:", error);
       }
-      // }
     }
+
+    const isActiveAColumn = activeData?.type === "Column";
+    if (!isActiveAColumn) return;
+
+    setColumns((columns) => {
+      const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+      const overColumnIndex = columns.findIndex((col) => col.id === overId);
+
+      return arrayMove(columns, activeColumnIndex, overColumnIndex);
+    });
   }
 
   function onDragOver(event: DragOverEvent) {
@@ -242,6 +324,20 @@ export default function WorkBoard() {
         }
 
         return arrayMove(tasks, activeIndex, overIndex);
+      });
+    }
+
+    const isOverAColumn = overData?.type === "Column";
+
+    if (isActiveATask && isOverAColumn) {
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
+        const activeTask = tasks[activeIndex];
+        if (activeTask) {
+          activeTask.columnId = overId as ColumnId;
+          return arrayMove(tasks, activeIndex, activeIndex);
+        }
+        return tasks;
       });
     }
   }

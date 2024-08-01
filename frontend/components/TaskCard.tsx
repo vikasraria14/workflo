@@ -1,17 +1,19 @@
 import type { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cva } from "class-variance-authority";
-import { GripVertical } from "lucide-react";
-import { Badge } from "./ui/badge";
 import { ColumnId } from "./KanbanBoard";
+import { ClockIcon } from "@/assets/GlobalIcons";
 
 export interface Task {
   id: UniqueIdentifier;
   columnId: ColumnId;
   content: string;
+  description: string;
+  priority: string;
+  deadline: string;
 }
 
 interface TaskCardProps {
@@ -48,6 +50,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
   const style = {
     transition,
     transform: CSS.Translate.toString(transform),
+    zIndex: isDragging ? 1000 : 'auto',  // Ensures the dragged item is above other items
   };
 
   const variants = cva("", {
@@ -59,31 +62,43 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     },
   });
 
+  const changeColor = (key)=>{
+    switch (key) {
+      case 'Low': return 'bg-green-200'
+        case 'Medium': return 'bg-orange-200'
+        case 'Urgent': return 'bg-red-500'
+      default: 'bg-transparent'
+        
+    }
+  }
+
   return (
-    <Card
+    <div
       ref={setNodeRef}
       style={style}
       className={variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
+      {...attributes}
+      {...listeners}
     >
-      <CardHeader className="px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative">
-        <Button
-          variant={"ghost"}
-          {...attributes}
-          {...listeners}
-          className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
-        >
-          <span className="sr-only">Move task</span>
-          <GripVertical />
-        </Button>
-        <Badge variant={"outline"} className="ml-auto font-semibold">
-          Task
-        </Badge>
-      </CardHeader>
-      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-        {task.content}
-      </CardContent>
-    </Card>
+      <Card className="w-full text-left">
+        <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
+          <div className="flex-auto px-1 pt-6">
+            <div>
+              <h5>{task.content}</h5>
+            </div>
+            <p className="mb-6 mt-3 leading-normal text-sm">{task.description}</p>
+            <div className="flex items-center justify-between">
+              <div className={`inline-block ${changeColor(task.priority)} px-8 py-2 mb-0 font-bold text-center uppercase align-middle transition-all border border-solid rounded-lg shadow-none leading-pro ease-soft-in text-xs`}>{task.priority}</div>
+            </div>
+            <div className="flex gap-x-3 mt-4">
+              <div><ClockIcon /></div>
+              <div className="leading-normal text-sm">{new Date(task.deadline).toLocaleString('sv-SE')}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
